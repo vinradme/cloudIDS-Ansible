@@ -1,0 +1,27 @@
+---
+- name: python-apt dependency.
+  apt:
+    name: python-apt
+    state: installed
+
+- name: apt-transport-https dependency.
+  apt:
+    name: apt-transport-https
+    state: installed
+
+- name: Add Threat Stack apt repository key.
+  apt_key:
+    url: https://app.threatstack.com/APT-GPG-KEY-THREATSTACK
+    id: 6EE04BD4
+    validate_certs: no
+
+- name: Add Threat Stack apt repository.
+  apt_repository:
+    repo: "deb {{ threatstack_pkg_url }}/Ubuntu {{ ansible_distribution_release }} main"
+    state: present
+    update_cache: yes
+
+- name: Ensure Threat Stack is installed.
+  apt:
+    name: "{{ threatstack_pkg }}"
+    state: "{{ threatstack_pkg_state }}"
